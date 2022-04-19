@@ -1,5 +1,5 @@
 # Kelas Game
-Class Game:
+class Game:
   # Konstruktor
   def __init__(self):
     pass
@@ -36,11 +36,64 @@ Class Game:
   def selesai(self):
     pass
   
-Class Manuk:
+# Kelas Manuk
+class Manuk:
+  # Konstruktor
+  def __init__(self):
+    pass
 
+  # Method Gerak
+  def gerak(self):
+    pass
 
-Class Jalan:
+  # Method Update
+  def update(self):
+    pass
 
+# Kelas Jalan
+class Jalan:
+  # Konstruktor
+  def __init__(self):
+    pass
 
-Class Pipa:
+  # Method Gerak 
+  def gerak(self):
+    pass
 
+  # Method Keadaan
+  def keadaan (self):
+    pass
+
+  # Method Soft_Reset 
+  def reset(self):
+    pass
+
+  # Method Terbang
+  def terbang(self):
+    pass
+
+  # Method Kepak_Sayap 
+  def kepak_sayap(self):
+    pass
+
+  # Method Jatuh
+  def jatuh(self):
+    pass
+
+  # Method Update
+  def update(self):
+    pass
+
+# Kelas Pipa
+class Pipa:
+  # Konstruktor
+  def __init__(self):
+    pass
+
+  # Method Gerak 
+  def gerak(self):
+    pass
+
+  # Method Pindah
+  def pindah(self):
+    pass
