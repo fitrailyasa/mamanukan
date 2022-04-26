@@ -420,24 +420,42 @@ def pixel_gambar(rect1, rect2, hitmask1, hitmask2):
 # Method Asset Gambar & Audio
 def asset(folder):
     gambar, audio = {}, {}
-    warna_manuk = (
-        # manuk hijau
+    jenis_manuk = (
+        # manuk emir
         (
-            folder + 'gambar/manuk_hijau_1.png',
-            folder + 'gambar/manuk_hijau_2.png',
-            folder + 'gambar/manuk_hijau_3.png',
+            folder + 'gambar/manuk_emir.png',
+            folder + 'gambar/manuk_emir.png',
+            folder + 'gambar/manuk_emir.png',
         ),
-        # manuk hitam
+        # manuk fitra
         (
-            folder + 'gambar/manuk_hitam_1.png',
-            folder + 'gambar/manuk_hitam_2.png',
-            folder + 'gambar/manuk_hitam_3.png',
+            folder + 'gambar/manuk_fitra.png',
+            folder + 'gambar/manuk_fitra.png',
+            folder + 'gambar/manuk_fitra.png',
         ),
-        # manuk merah
+        # manuk haikal
         (
-            folder + 'gambar/manuk_merah_1.png',
-            folder + 'gambar/manuk_merah_2.png',
-            folder + 'gambar/manuk_merah_3.png',
+            folder + 'gambar/manuk_haikal.png',
+            folder + 'gambar/manuk_haikal.png',
+            folder + 'gambar/manuk_haikal.png',
+        ),
+        # manuk mery
+        (
+            folder + 'gambar/manuk_mery.png',
+            folder + 'gambar/manuk_mery.png',
+            folder + 'gambar/manuk_mery.png',
+        ),
+        # manuk pandu
+        (
+            folder + 'gambar/manuk_pandu.png',
+            folder + 'gambar/manuk_pandu.png',
+            folder + 'gambar/manuk_pandu.png',
+        ),
+        # manuk rahma
+        (
+            folder + 'gambar/manuk_rahma.png',
+            folder + 'gambar/manuk_rahma.png',
+            folder + 'gambar/manuk_rahma.png',
         ),
     )
 
@@ -449,8 +467,8 @@ def asset(folder):
 
     # warna pipa
     warna_pipa = (
-        folder + 'gambar/pipa_hijau.png',
-        folder + 'gambar/pipa_oren.png',
+        folder + 'gambar/pipa_merah.png',
+        folder + 'gambar/pipa_biru.png',
     )
 
     # skor
@@ -484,11 +502,11 @@ def asset(folder):
     gambar['background'] = pygame.image.load(warna_bg[indeks_bg]).convert()
 
     # gambar manuk
-    indeks_manuk = random.randint(0, len(warna_manuk) - 1)
+    indeks_manuk = random.randint(0, len(jenis_manuk) - 1)
     gambar['manuk'] = (
-        pygame.image.load(warna_manuk[indeks_manuk][0]).convert_alpha(),
-        pygame.image.load(warna_manuk[indeks_manuk][1]).convert_alpha(),
-        pygame.image.load(warna_manuk[indeks_manuk][2]).convert_alpha(),
+        pygame.image.load(jenis_manuk[indeks_manuk][0]).convert_alpha(),
+        pygame.image.load(jenis_manuk[indeks_manuk][1]).convert_alpha(),
+        pygame.image.load(jenis_manuk[indeks_manuk][2]).convert_alpha(),
     )
 
     # gambar pipa
