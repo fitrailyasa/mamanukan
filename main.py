@@ -2,18 +2,8 @@ import random
 import sys
 import argparse
 from itertools import cycle
-
-# memilih tingkat kesulitan dalam game
-parser = argparse.ArgumentParser(usage='%(prog)s [-h]/[-opt]',
-                                 description='Play Mamanukan Game',
-                                 allow_abbrev=False)
-group = parser.add_mutually_exclusive_group(required=True)
-group.add_argument('-e', '--easy', action='store_true', help='easy mode')
-group.add_argument('-m', '--median', action='store_true', help='median mode')
-group.add_argument('-d', '--difficult', action='store_true', help='hard mode')
-args = parser.parse_args()
-
 import pygame
+
 # Kelas Game
 class Game:
     # setting tampilan windows
@@ -27,7 +17,7 @@ class Game:
     jarak_pipa_X = 100 
     jarak_pipa_y = 100 
     
-    # variabel gambar dan audio 
+    # variabel gambar dan audio (suara)
     gambar, suara = {}, {}
 
     # variabel objek
@@ -46,13 +36,13 @@ class Game:
         pygame.init()
         self.fpslock = pygame.time.Clock()
         self.screen = pygame.display.set_mode((self.lebar, self.tinggi))
-        pygame.display.set_caption('Flappy Bird')
+        pygame.display.set_caption('Mamanukan')
 
         # asset gambar dan audio
         self.gambar, self.suara = asset('asset/')
         
         # pesan tampilan halaman awal
-        self.pesan = [int((self.lebar - self.gambar['message'].get_width()) /2),
+        self.pesan = [int((self.lebar - self.gambar['home'].get_width()) /2),
                       int(self.tinggi * 0.12)]
 
         # mengatur kecepatan gerak
@@ -61,7 +51,7 @@ class Game:
         # membangun objek
         jalan_xy = [0, int(self.tinggi * .79)]
         manuk_xy = [int(self.lebar * .2),
-                  int((self.tinggi - self.gambar['bird'][0].get_height()) / 2)]
+                  int((self.tinggi - self.gambar['manuk'][0].get_height()) / 2)]
         self.jalan = Jalan(jalan_xy, self.kecepatan, self.gambar)
         self.manuk = Manuk(manuk_xy, jalan_xy[1], self.gambar)
 
@@ -96,9 +86,9 @@ class Game:
     # Method memulai
     def mulai(self):
         self.manuk.softreset()
-        pipe1 = self.pipa_awal(self.lebar + 200)
-        pipe2 = self.pipa_awal(self.lebar + 200 + pipe1.width + self.jarak_pipa_y)
-        self.pipa = [pipe1, pipe2]
+        pipa1 = self.pipa_awal(self.lebar + 200)
+        pipa2 = self.pipa_awal(self.lebar + 200 + pipa1.width + self.jarak_pipa_y)
+        self.pipa = [pipa1, pipa2]
 
         while True:
             for event in pygame.event.get():
@@ -117,10 +107,10 @@ class Game:
                 return
 
             # update skor
-            birdMidPos = self.manuk.X + self.manuk.width / 2
-            for pipe in self.pipa:
-                pipeMidPos = pipe.x + pipe.width / 2
-                if pipeMidPos <= birdMidPos < pipeMidPos + self.kecepatan:
+            keadaan_manuk = self.manuk.X + self.manuk.width / 2
+            for pipa in self.pipa:
+                keadaan_pipa = pipa.x + pipa.width / 2
+                if keadaan_pipa <= keadaan_manuk < keadaan_pipa + self.kecepatan:
                     self.suara['point'].play()
                     self.skor += 1
 
@@ -163,15 +153,15 @@ class Game:
         # mengatur jarak antara pipa atas dan bawah
         gapY = random.randrange(0, int(self.jalan.Y * 0.6 - self.jarak_pipa_X))
         gapY += int(self.jalan.Y * 0.2)
-        pipeHeight = self.gambar['pipe'][0].get_height()
-        pipeX = pos_x
+        pipaHeight = self.gambar['pipa'][0].get_height()
+        pipaX = pos_x
 
-        pipe_pair = {
-            'x': pipeX,
-            'upper': gapY - pipeHeight, # upper y
+        pipa_pair = {
+            'x': pipaX,
+            'upper': gapY - pipaHeight, # upper y
             'lower': gapY + self.jarak_pipa_X # lower y
         }
-        return Pipa(pipe_pair, self.kecepatan, self.gambar)
+        return Pipa(pipa_pair, self.kecepatan, self.gambar)
     
     # Method mengupdate pipa
     def update_pipa(self):
@@ -201,9 +191,9 @@ class Game:
 
         # pesan & skor
         if flag == 'welc':
-            self.screen.blit(self.gambar['message'], self.pesan)
+            self.screen.blit(self.gambar['home'], self.pesan)
         elif flag == 'over':
-            self.screen.blit(self.gambar['gameover'], (50, 180))
+            self.screen.blit(self.gambar['selesai'], (50, 180))
         if flag in ('play', 'over'):
             self.tampil_skor()
 
@@ -223,14 +213,14 @@ class Game:
         totalWidth = 0 
 
         for digit in scoreDigits:
-            totalWidth += self.gambar['numbers'][digit].get_width()
+            totalWidth += self.gambar['nomor'][digit].get_width()
 
         Xoffset = (self.lebar - totalWidth) / 2
 
         for digit in scoreDigits:
-            self.screen.blit( self.gambar['numbers'][digit],
+            self.screen.blit( self.gambar['nomor'][digit],
                               (Xoffset, self.tinggi * 0.1) )
-            Xoffset += self.gambar['numbers'][digit].get_width()
+            Xoffset += self.gambar['nomor'][digit].get_width()
 
 # Kelas Jalan
 class Jalan:
@@ -238,9 +228,9 @@ class Jalan:
     def __init__(self, koordinat, kecepatan, gambar):
         self.x, self.Y = koordinat[0], koordinat[1]
         self.speed = kecepatan
-        self.IMG = gambar['base']
+        self.IMG = gambar['jalan']
         # basis jumlah dapat bergeser maksimum ke kiri 
-        self.SHIFT = gambar['base'].get_width() - gambar['background'].get_width()
+        self.SHIFT = gambar['jalan'].get_width() - gambar['background'].get_width()
 
     # Method update posisi jalan
     def update(self):
@@ -257,7 +247,7 @@ class Manuk:
     wingIndex = 0 
     wingMode = cycle([0, 1, 2, 1]) 
     loopIter = 0
-    birdShm = {'val': 0, 'index': 1}
+    manuk_Shm = {'val': 0, 'index': 1}
     X        =   0     
     y        =   0
     INITY    =   0      
@@ -276,27 +266,27 @@ class Manuk:
     # Konstruktor
     def __init__(self, koordinat, jalan_Y, gambar):
         self.X, self.y, self.INITY = koordinat[0], koordinat[1], koordinat[1]
-        self.IMG = gambar['bird'] 
-        self.width = gambar['bird'][0].get_width()
-        self.height = gambar['bird'][0].get_height()
+        self.IMG = gambar['manuk'] 
+        self.width = gambar['manuk'][0].get_width()
+        self.height = gambar['manuk'][0].get_height()
         self.yBOTTOM = jalan_Y - self.height
         self.MASK = (
             # hitmask untuk mode sayap
-            get_gambar(gambar['bird'][0]),
-            get_gambar(gambar['bird'][1]),
-            get_gambar(gambar['bird'][2])
+            get_gambar(gambar['manuk'][0]),
+            get_gambar(gambar['manuk'][1]),
+            get_gambar(gambar['manuk'][2])
         )
 
-    # Method osilasi nilai dari birdShm['val'] antara 8 dan -8
+    # Method osilasi nilai dari manuk_Shm['val'] antara 8 dan -8
     def Keadaan(self):
-        if abs(self.birdShm['val']) == 8:
-            self.birdShm['index'] *= -1
+        if abs(self.manuk_Shm['val']) == 8:
+            self.manuk_Shm['index'] *= -1
 
-        if self.birdShm['index'] == 1:
-            self.birdShm['val'] += 1
+        if self.manuk_Shm['index'] == 1:
+            self.manuk_Shm['val'] += 1
         else:
-            self.birdShm['val'] -= 1
-        self.y += self.birdShm['val']
+            self.manuk_Shm['val'] -= 1
+        self.y += self.manuk_Shm['val']
 
     # Method softreset status manuk
     def softreset(self):
@@ -310,7 +300,7 @@ class Manuk:
         self.softreset()
         self.rotation = 0
         self.y = self.INITY
-        self.birdShm = {'val': 0, 'index': 1}
+        self.manuk_Shm = {'val': 0, 'index': 1}
 
     # Method animasi sayap
     def kepak_sayap(self):
@@ -323,7 +313,7 @@ class Manuk:
     def terbang(self):
         self.flapped = True
 
-    # Method update bird velocity dan rotasi
+    # Method update manuk_ velocity dan rotasi
     def update(self):
         if self.flapped:
             self.velY = self.flapVel
@@ -363,13 +353,13 @@ class Pipa:
         self.x = p['x']
         self.upperY, self.lowerY = p['upper'], p['lower']
         self.speed = kecepatan
-        self.IMG = gambar['pipe'] 
-        self.width = gambar['pipe'][0].get_width()
-        self.height = gambar['pipe'][0].get_height()
+        self.IMG = gambar['pipa'] 
+        self.width = gambar['pipa'][0].get_width()
+        self.height = gambar['pipa'][0].get_height()
         self.MASK = (
             # hitmask untuk pipa
-            get_gambar(gambar['pipe'][0]), 
-            get_gambar(gambar['pipe'][1]) 
+            get_gambar(gambar['pipa'][0]), 
+            get_gambar(gambar['pipa'][1]) 
         )
 
     # Method Gerak pipa
@@ -381,8 +371,9 @@ class Pipa:
         obj.blit(self.IMG[0], (self.x, self.upperY))
         obj.blit(self.IMG[1], (self.x, self.lowerY))
 
-# Method get gambar
+
 def get_gambar(image):
+    """returns a hitmask using an image's alpha."""
     mask = []
     for x in range(image.get_width()):
         mask.append([])
@@ -390,6 +381,152 @@ def get_gambar(image):
             mask[x].append(bool(image.get_at((x,y))[3]))
     return mask
 
-# Method tabrak
-def tabrak(bird, pipes):
-  pass
+# Method tabbrak
+def tabrak(manuk_, pipa):
+    if manuk_.touchground():
+        return True
+    
+    manuk_Rect = pygame.Rect(manuk_.X, manuk_.y, manuk_.width, manuk_.height)
+    manuk_Mask = manuk_.MASK[manuk_.wingIndex]
+    for p in pipa:
+        uRect = pygame.Rect(p.x, p.upperY, p.width, p.height)
+        lRect = pygame.Rect(p.x, p.lowerY, p.width, p.height)
+        uMask = p.MASK[0]
+        lMask = p.MASK[1]
+        uCollide = pixel_gambar(manuk_Rect, uRect, manuk_Mask, uMask)
+        lCollide = pixel_gambar(manuk_Rect, lRect, manuk_Mask, lMask)
+
+        if uCollide or lCollide:
+            return True
+
+    return False
+
+# Method pixel gambar
+def pixel_gambar(rect1, rect2, hitmask1, hitmask2):
+    rect = rect1.clip(rect2)
+
+    if rect.width == 0 or rect.height == 0:
+        return False
+
+    x1, y1 = rect.x - rect1.x, rect.y - rect1.y
+    x2, y2 = rect.x - rect2.x, rect.y - rect2.y
+
+    for x in range(rect.width):
+        for y in range(rect.height):
+            if hitmask1[x1+x][y1+y] and hitmask2[x2+x][y2+y]:
+                return True
+    return False
+
+# Method Asset Gambar & Audio
+def asset(folder):
+    gambar, audio = {}, {}
+    warna_manuk = (
+        # manuk hijau
+        (
+            folder + 'gambar/manuk_hijau_1.png',
+            folder + 'gambar/manuk_hijau_2.png',
+            folder + 'gambar/manuk_hijau_3.png',
+        ),
+        # manuk hitam
+        (
+            folder + 'gambar/manuk_hitam_1.png',
+            folder + 'gambar/manuk_hitam_2.png',
+            folder + 'gambar/manuk_hitam_3.png',
+        ),
+        # manuk merah
+        (
+            folder + 'gambar/manuk_merah_1.png',
+            folder + 'gambar/manuk_merah_2.png',
+            folder + 'gambar/manuk_merah_3.png',
+        ),
+    )
+
+    # warna background
+    warna_bg = (
+        folder + 'gambar/mode_siang.png',
+        folder + 'gambar/mode_malam.png',
+    )
+
+    # warna pipa
+    warna_pipa = (
+        folder + 'gambar/pipa_hijau.png',
+        folder + 'gambar/pipa_oren.png',
+    )
+
+    # skor
+    gambar['nomor'] = (
+        pygame.image.load(folder + 'gambar/0.png').convert_alpha(),
+        pygame.image.load(folder + 'gambar/1.png').convert_alpha(),
+        pygame.image.load(folder + 'gambar/2.png').convert_alpha(),
+        pygame.image.load(folder + 'gambar/3.png').convert_alpha(),
+        pygame.image.load(folder + 'gambar/4.png').convert_alpha(),
+        pygame.image.load(folder + 'gambar/5.png').convert_alpha(),
+        pygame.image.load(folder + 'gambar/6.png').convert_alpha(),
+        pygame.image.load(folder + 'gambar/7.png').convert_alpha(),
+        pygame.image.load(folder + 'gambar/8.png').convert_alpha(),
+        pygame.image.load(folder + 'gambar/9.png').convert_alpha()
+    )
+
+    # gambar selesai
+    gambar['selesai'] = pygame.image.load(
+        folder + 'gambar/selesai.png').convert_alpha()
+    
+    # gambar home
+    gambar['home'] = pygame.image.load(
+        folder + 'gambar/home.png').convert_alpha()
+    
+    # gambar jalan
+    gambar['jalan'] = pygame.image.load(
+        folder + 'gambar/jalan.png').convert_alpha()
+    
+    # gambar background
+    indeks_bg = random.randint(0, len(warna_bg) - 1)
+    gambar['background'] = pygame.image.load(warna_bg[indeks_bg]).convert()
+
+    # gambar manuk
+    indeks_manuk = random.randint(0, len(warna_manuk) - 1)
+    gambar['manuk'] = (
+        pygame.image.load(warna_manuk[indeks_manuk][0]).convert_alpha(),
+        pygame.image.load(warna_manuk[indeks_manuk][1]).convert_alpha(),
+        pygame.image.load(warna_manuk[indeks_manuk][2]).convert_alpha(),
+    )
+
+    # gambar pipa
+    indeks_pipa = random.randint(0, len(warna_pipa) - 1)
+    gambar['pipa'] = (
+        pygame.transform.flip(
+            pygame.image.load(warna_pipa[indeks_pipa]).convert_alpha(), False, True),
+        pygame.image.load(warna_pipa[indeks_pipa]).convert_alpha(),
+    )
+
+    # audio
+    if 'menang' in sys.platform:
+        ekstensi_audio = '.wav'
+    else:
+        ekstensi_audio = '.ogg'
+    audio['die']    = pygame.mixer.Sound(folder + 'audio/die' + ekstensi_audio)
+    audio['hit']    = pygame.mixer.Sound(folder + 'audio/hit' + ekstensi_audio)
+    audio['point']  = pygame.mixer.Sound(folder + 'audio/point' + ekstensi_audio)
+    audio['swoosh'] = pygame.mixer.Sound(folder + 'audio/swoosh' + ekstensi_audio)
+    audio['wing']   = pygame.mixer.Sound(folder + 'audio/wing' + ekstensi_audio)
+
+    return gambar, audio
+
+# Instansiasi objek
+# memilih tingkat kesulitan dalam game
+parser = argparse.ArgumentParser(usage='%(prog)s [-h]/[-opt]',
+                                 description='Play Game Mamanukan',
+                                 allow_abbrev=False)
+group = parser.add_mutually_exclusive_group(required=True)
+group.add_argument('-e', '--easy', action='store_true', help='easy mode')
+group.add_argument('-m', '--median', action='store_true', help='median mode')
+group.add_argument('-d', '--difficult', action='store_true', help='hard mode')
+args = parser.parse_args()
+
+# Method utama / main untuk memilih mode
+def main(mode):
+    Game(mode)
+
+
+if __name__ == '__main__':
+    main(sys.argv[1])
