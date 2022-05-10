@@ -40,6 +40,19 @@ Instalasi menggunakan PIP
 ```sh
 pip install pygame
 ```
+Cara Penggunaan Game:
+Tingkat Kesulitan = Mudah
+```sh
+py main.py -e
+```
+Tingkat Kesulitan = Sedang
+```sh
+py main.py -m
+```
+Tingkat Kesulitan = Sulit
+```sh
+py main.py -d
+```
 
 ## Plugin
 
