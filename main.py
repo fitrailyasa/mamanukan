@@ -2,6 +2,7 @@ import random
 import sys
 import argparse
 from itertools import cycle
+from abc import ABC, abstractmethod
 import pygame
 
 # Kelas Game
@@ -39,10 +40,10 @@ class Game:
         pygame.display.set_caption('Mamanukan')
 
         # asset gambar dan audio
-        self.gambar, self.suara = asset('asset/')
+        self._gambar, self._suara = asset('asset/')
         
         # pesan tampilan halaman awal
-        self.pesan = [int((self.lebar - self.gambar['home'].get_width()) /2),
+        self.pesan = [int((self.lebar - self._gambar['home'].get_width()) /2),
                       int(self.tinggi * 0.12)]
 
         # mengatur kecepatan gerak
@@ -51,9 +52,9 @@ class Game:
         # membangun objek
         jalan_xy = [0, int(self.tinggi * .79)]
         manuk_xy = [int(self.lebar * .2),
-                  int((self.tinggi - self.gambar['manuk'][0].get_height()) / 2)]
-        self.jalan = Jalan(jalan_xy, self.kecepatan, self.gambar)
-        self.manuk = Manuk(manuk_xy, jalan_xy[1], self.gambar)
+                  int((self.tinggi - self._gambar['manuk'][0].get_height()) / 2)]
+        self.jalan = Jalan(jalan_xy, self.kecepatan, self._gambar)
+        self.manuk = Manuk(manuk_xy, jalan_xy[1], self._gambar)
 
         # perulangan program utama
         while True:
@@ -62,11 +63,11 @@ class Game:
             self.game_berakhir()
 
     # Method tampilan awal
-    def tampilan_awal(self):
+    def tampilan_awal(Game):
         # reset
-        self.manuk.reset()
-        self.pipa.clear()
-        self.skor = 0
+        Game.manuk.reset()
+        Game.pipa.clear()
+        Game.skor = 0
 
         while True:
             for event in pygame.event.get():
@@ -76,12 +77,12 @@ class Game:
                     sys.exit()
                 if event.type == pygame.KEYDOWN and \
                 (event.key == pygame.K_SPACE or event.key == pygame.K_UP):
-                    self.suara['wing'].play()
+                    Game._suara['wing'].play()
                     return
 
             # manuk terbang
-            self.manuk.Keadaan()
-            self.refresh('welc')
+            Game.manuk.Keadaan()
+            Game.refresh('welc')
    
     # Method memulai
     def mulai(self):
@@ -98,7 +99,7 @@ class Game:
                     sys.exit()
                 if event.type == pygame.KEYDOWN and \
                 (event.key == pygame.K_SPACE or event.key == pygame.K_UP):
-                    self.suara['wing'].play()
+                    self._suara['wing'].play()
                     self.manuk.terbang()
 
             # mengecek status ketika jatuh
@@ -111,7 +112,7 @@ class Game:
             for pipa in self.pipa:
                 keadaan_pipa = pipa.x + pipa.width / 2
                 if keadaan_pipa <= keadaan_manuk < keadaan_pipa + self.kecepatan:
-                    self.suara['point'].play()
+                    self._suara['point'].play()
                     self.skor += 1
 
             # memperbarui manuk
@@ -124,8 +125,8 @@ class Game:
     # Method selesai (game over)
     def game_berakhir(self):
         # suara ketika menabrak dan mati
-        self.suara['hit'].play()
-        self.suara['die'].play()
+        self._suara['hit'].play()
+        self._suara['die'].play()
 
         while True:
             for event in pygame.event.get():
@@ -153,7 +154,7 @@ class Game:
         # mengatur jarak antara pipa atas dan bawah
         gapY = random.randrange(0, int(self.jalan.Y * 0.6 - self.jarak_pipa_X))
         gapY += int(self.jalan.Y * 0.2)
-        pipaHeight = self.gambar['pipa'][0].get_height()
+        pipaHeight = self._gambar['pipa'][0].get_height()
         pipaX = pos_x
 
         pipa_pair = {
@@ -161,9 +162,10 @@ class Game:
             'upper': gapY - pipaHeight, # upper y
             'lower': gapY + self.jarak_pipa_X # lower y
         }
-        return Pipa(pipa_pair, self.kecepatan, self.gambar)
+        return Pipa(pipa_pair, self.kecepatan, self._gambar)
     
     # Method mengupdate pipa
+    @abstractmethod
     def update_pipa(self):
         # menggeser pipa ke kiri
         for p in self.pipa:
@@ -182,7 +184,7 @@ class Game:
     # Method refresh
     def refresh(self, flag):
         # background, pipa & jalan
-        self.screen.blit(self.gambar['background'], (0, 0))
+        self.screen.blit(self._gambar['background'], (0, 0))
         for p in self.pipa:
             p.update(self.screen)
         if flag != 'over':
@@ -191,9 +193,9 @@ class Game:
 
         # pesan & skor
         if flag == 'welc':
-            self.screen.blit(self.gambar['home'], self.pesan)
+            self.screen.blit(self._gambar['home'], self.pesan)
         elif flag == 'over':
-            self.screen.blit(self.gambar['selesai'], (50, 180))
+            self.screen.blit(self._gambar['selesai'], (50, 180))
         if flag in ('play', 'over'):
             self.tampil_skor()
 
@@ -213,14 +215,14 @@ class Game:
         totalWidth = 0 
 
         for digit in scoreDigits:
-            totalWidth += self.gambar['nomor'][digit].get_width()
+            totalWidth += self._gambar['nomor'][digit].get_width()
 
         Xoffset = (self.lebar - totalWidth) / 2
 
         for digit in scoreDigits:
-            self.screen.blit( self.gambar['nomor'][digit],
+            self.screen.blit( self._gambar['nomor'][digit],
                               (Xoffset, self.tinggi * 0.1) )
-            Xoffset += self.gambar['nomor'][digit].get_width()
+            Xoffset += self._gambar['nomor'][digit].get_width()
 
 # Kelas Jalan
 class Jalan:
@@ -232,7 +234,8 @@ class Jalan:
         # basis jumlah dapat bergeser maksimum ke kiri 
         self.SHIFT = gambar['jalan'].get_width() - gambar['background'].get_width()
 
-    # Method update posisi jalan
+    # Method update posisi jalan\
+    @abstractmethod
     def update(self):
         self.x = -((-self.x + self.speed) % self.SHIFT)
 
@@ -313,7 +316,8 @@ class Manuk:
     def terbang(self):
         self.flapped = True
 
-    # Method update manuk_ velocity dan rotasi
+    # Method update manuk velocity dan rotasi
+    @abstractmethod
     def update(self):
         if self.flapped:
             self.velY = self.flapVel
