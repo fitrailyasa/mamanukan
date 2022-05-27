@@ -54,6 +54,22 @@ Tingkat Kesulitan = Sulit
 ```sh
 py main.py -d
 ```
+## instalasi container
+Buat file dengan nama Dockerfile (tanpa extensi) yang isinya :
+```sh 
+FROM python:3
+
+WORKDIR (directory file)
+
+COPY /asset .
+COPY main.py . 
+COPY requirements.txt .
+COPY README.md .
+
+RUN pip install --no-cache-dir -r requirements.txt
+
+CMD ["python", "./main.py", "-e"]
+```
 
 ## Plugin
 
