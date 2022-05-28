@@ -1,47 +1,55 @@
-# Tugas Besar 
-Pemrograman Berorientasi Objek Kelas RD
-## Game Mamanukan
+# Game Mamanukan
+<img src=“asset/home.png” width=“100%”>
+
+## Deskripsi
 Aplikasi game yang akan dibuat adalah, sebuah game burung terbang yang ditujukan agar si pemain dapat menjaga burung tersebut untuk tetap terbang dengan cara menekan tombol. Bukan hanya itu, pemain juga harus menjaga agar burung tidak terkena pipa untuk mendapatkan skor yang tinggi.
 
-## Kelompok 4 : Ope Warnet
-- 120140180 Merysah (Project Leader)
-- 120140048 Fitra Ilyasa (Programmer)
-- 120140168 M Haikal Fauzananda (Programmer)
-- 120140169 Emirssyah Putra (Programmer)
-- 120140170 Pandu Wiratama (Tester)
-- 120140184 Rahma Wati (Designer)
+## Tugas Besar | Hands-On 4
+Mata Kuliah Pemrograman Berorientasi Objek Kelas RD & Sistem Operasi RD
 
+## Kelompok 4 : Ope Warnet
+| NIM | NAMA | SEBAGAI |
+| --- | ---- | ------- |
+| 120140180 | [Merysah] | Project Leader & Tester |
+| 120140048 | [Fitra Ilyasa] | Programmer |
+| 120140168 | [M Haikal Fauzananda] | Programmer |
+| 120140169 | [Emirssyah Putra] | Programmer |
+| 120140170 | [Pandu Wiratama] | Tester |
+| 120140184 | [Rahma Wati] | Designer |
 
 ## Fitur Game
-
 - Mode Siang dan Mode Malam
 - Tingkat Kesulitan Game
 - Random Karakter Manuk (Burung)
 
+## Penggunaan Sifat Dasar PBO
+- Inheritance (Pewarisan)
+- Encapsulation (Enkapsulasi)
+- Abstract (Absraksi)
+
+## 
+
 ## Teknologi
-
 Teknologi yang digunakan untuk membuat game mamanukan:
-
 - [Python] - Bahasa pemrograman yang digunakan.
 - [Pygame] - Library python untuk membuat game.
 - [Photoshop] - Aplikasi yang digunakan untuk membuat desain aset gambar.
 
-## Instalasi
-Untuk mengkloning source code game.
-
+## 1. Instalasi Manual
+#### a. Untuk mengkloning source code game
 ```sh
-https://github.com/fitrailyasa/mamanukan.git
+git clone git@github.com:fitrailyasa/mamanukan.git
 ```
 
-Requirement:
+#### b. Requirement:
 - Pygame
 
-Instalasi menggunakan PIP
+Instalasi [pygame] menggunakan PIP
 ```sh
 pip install pygame
 ```
 
-## Cara Penggunaan Game:
+#### c. Tingkatan
 Tingkat Kesulitan = Mudah
 ```sh
 py main.py -e
@@ -54,21 +62,36 @@ Tingkat Kesulitan = Sulit
 ```sh
 py main.py -d
 ```
-## instalasi container
-Buat file dengan nama Dockerfile (tanpa extensi) yang isinya :
+
+## 2. Instalasi Menggunakan Docker Kontainer
+#### a. Untuk mengkloning source code game
 ```sh 
-FROM python:3
+git clone git@github.com:fitrailyasa/mamanukan.git
+```
 
-WORKDIR (directory file)
+### b. Build game  :
+Docker membuild game mamanukan (.) untuk menunjukkan direktori
+```sh 
+docker build -t mamanukan .
+```
 
-COPY /asset .
-COPY main.py . 
-COPY requirements.txt .
-COPY README.md .
+Docker Menjalankan game mamanukan
+```sh
+docker run mamanukan
+```
 
-RUN pip install --no-cache-dir -r requirements.txt
-
-CMD ["python", "./main.py", "-e"]
+#### c. Tingkatan
+Tingkat Kesulitan = Mudah
+```sh
+py main.py -e
+```
+Tingkat Kesulitan = Sedang
+```sh
+py main.py -m
+```
+Tingkat Kesulitan = Sulit
+```sh
+py main.py -d
 ```
 
 ## Plugin
@@ -76,8 +99,17 @@ CMD ["python", "./main.py", "-e"]
 Petunjuk tentang cara menggunakan game ini dijelaskan dengan plugin berikut:
 | Plugin | README |
 | ------ | ------ |
-| GitHub | [https://github.com/fitrailyasa/mamanukan/blob/fitra/README.md][PlDb] |
+| GitHub | [https://github.com/fitrailyasa/mamanukan/blob/fitra/README.md] |
+
+## Link Demo Game "MAMANUKAN"
+[![MAMANUKAN](https://img.youtube.com/vi/6v41BSRLSng/0.jpg)](https://www.youtube.com/watch?v=6v41BSRLSng)
 
    [Python]: <https://www.python.org/>
    [Pygame]: <https://www.pygame.org/>
    [Photoshop]: <https://www.adobe.com/sea/products/photoshop.html>
+   [Merysah]: <https://github.com/chchaaa12>
+   [Fitra Ilyasa]: <https://github.com/fitrailyasa>
+   [M Haikal Fauzananda]: <https://github.com/muhammadhaikalfauzananda>
+   [Emirssyah Putra]: <https://github.com/emirssyahputra>
+   [Pandu Wiratama]: <https://github.com/PanduWiratama>
+   [Rahma Wati]: <https://github.com/rahma0891>
