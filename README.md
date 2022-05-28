@@ -1,5 +1,5 @@
 # Game Mamanukan
-<img src=“asset/gambar/judul.png” width=“100%”>
+<img src="asset/gambar/judul.png" width="100%">
 
 ## Deskripsi
 Aplikasi game yang akan dibuat adalah, sebuah game burung terbang yang ditujukan agar si pemain dapat menjaga burung tersebut untuk tetap terbang dengan cara menekan tombol. Bukan hanya itu, pemain juga harus menjaga agar burung tidak terkena pipa untuk mendapatkan skor yang tinggi.
